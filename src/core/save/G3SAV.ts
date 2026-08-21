@@ -284,22 +284,22 @@ export class G3SAV extends OfficialSAV<PK3> {
     if (trainerMon) {
       this.origin = trainerMon?.gameOfOrigin
     } else {
-      let fileName = this.filePath.name
+      let fileName = this.filePath.name.toLowerCase()
 
       fileName = fileName.replace(/\s+/g, '')
-      if (fileName.includes('Ruby')) {
+      if (fileName.includes('ruby')) {
         this.origin = OriginGame.Ruby
         return
       }
-      if (fileName.includes('Sapphire')) {
+      if (fileName.includes('sapphire')) {
         this.origin = OriginGame.Sapphire
         return
       }
-      if (fileName.includes('FireRed')) {
+      if (fileName.includes('firered')) {
         this.origin = OriginGame.FireRed
         return
       }
-      if (fileName.includes('LeafGreen')) {
+      if (fileName.includes('leafgreen')) {
         this.origin = OriginGame.LeafGreen
       } else {
         this.origin = this.primarySave.origin
