@@ -138,6 +138,20 @@ export function useSaves(): SavesAndBanksManager {
       const sourceSave = sourceSaveIdentifier ? saveFromIdentifier(sourceSaveIdentifier) : undefined
       const destSave = openSavesState.openSaves[dest.saveIdentifier].save
 
+      // Same-format moves (e.g. Gen 3 save to Gen 3 save) keep the original
+      // mon untouched: no OHPKM wrapping, no tracking, no regeneration.
+      if (
+        mon &&
+        sourceSave &&
+        !(mon instanceof OHPKM) &&
+        (sourceSave.constructor as SAVClass).pkmType === (destSave.constructor as SAVClass).pkmType
+      ) {
+        const displacedMon = destSave.getMonAt(dest.box, dest.boxSlot)
+        destSave.setMonAt(dest.box, dest.boxSlot, mon as never)
+        destSave.updatedBoxSlots.push({ box: dest.box, boxSlot: dest.boxSlot })
+        return R.Ok(displacedMon)
+      }
+
       let ohpkm: Option<OHPKM>
       if (mon) {
         ohpkm =
